@@ -1,0 +1,29 @@
+version: '3'
+services:
+  hedwig-api:
+    container_name: hedwig-api
+    build:
+      context: ./packages/api/hedwig-api
+      args:
+          - NPM_TOKEN=$NPM_TOKEN
+    environment:
+      - hedwig_REDIS_HOST=redis://hedwig-cache
+      - hedwig_DB_HOST=hedwig-db
+    expose:
+      - 8000
+    ports:
+      - 8000:8000
+    tty: true
+    depends_on:
+      - hedwig-db
+      - hedwig-cache
+  hedwig-db:
+    image: mongo
+    container_name: hedwig-db
+    expose:
+      - 27017
+  hedwig-cache:
+    image: redis:latest
+    container_name: hedwig-cache
+    expose:
+      - 6379

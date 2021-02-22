@@ -1,0 +1,15 @@
+lerna-debug.log
+node_modules
+npm-debug.log
+.DS_Store
+coverage
+.nyc_output
+api-docs
+**/*.tgz
+packages/**/dist
+examples/**/dist
+**/package
+.env
+**/.env
+**/*.tsbuildinfo
+

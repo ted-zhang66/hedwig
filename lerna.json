@@ -1,0 +1,35 @@
+{
+  "packages": [
+    "packages/api/hedwig-api",
+    "packages/ui/hedwig-ui"
+  ],
+  "version": "independent",
+  "command": {
+    "bootstrap": {
+      "concurrency": 8,
+      "forceLocal": true
+    },
+    "version": {
+      "conventionalCommits": true,
+      "message": "chore: publish release",
+      "concurrency": 8,
+      "ignoreChanges": []
+    },
+    "publish": {
+      "allowBranch": "master",
+      "yes": true
+    },
+    "run": {
+      "prefix": false,
+      "loglevel": "silent",
+      "stream": true,
+      "concurrency": 8,
+      "sort": false
+    },
+    "clean": {
+      "loglevel": "silent",
+      "concurrency": 8,
+      "yes": true
+    }
+  }
+}

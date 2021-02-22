@@ -1,0 +1,18 @@
+{
+     "include": [
+      "packages/ui/hedwig-ui",
+      "packages/api/hedwig-api",
+
+    ],
+    "exclude": [
+      "packages/*/dist/__tests__/"
+    ],
+    "extension": [
+      ".js",
+      ".ts"
+    ],
+    "reporter": [
+    "text",
+    "lcov"
+    ]
+}

@@ -1,0 +1,56 @@
+language: node_js
+os:
+  - linux
+node_js:
+  - node
+  - lts/*
+services:
+  - docker
+# Configure github and npm 
+before_install:
+  - sudo apt-get update
+  - sudo apt-get -y install libsecret-1-dev
+  - sudo apt-get -y install pass gnupg2
+  - |-
+    if [ $TRAVIS_PULL_REQUEST == false ] && [ $TRAVIS_BRANCH == "master" ];
+     then
+        echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" >> $HOME/.npmrc 2> /dev/null
+        git config --global user.email ${GH_EMAIL}
+        git config --global user.name "LabShare"
+        git remote set-url origin "https://${GH_TOKEN}@github.com/$TRAVIS_REPO_SLUG.git" > /dev/null 2>&1
+        git checkout master
+      else
+        echo "//registry.npmjs.org/:_authToken=\${NPM_INSTALL_TOKEN}" >> $HOME/.npmrc 2> /dev/null
+    fi
+  - npm install -g codecov typescript lerna
+  - npm run docker:test:up
+install:
+  - npm ci
+# Build , test and codecov
+script:
+  - npm run test
+  - codecov
+# Send coverage data to Coveralls
+after_success:
+  - if [ "${TRAVIS_PULL_REQUEST}" = "false" ]; then codecov; fi
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
+cache:
+  directories:
+    - ~/.npm
+notifications:
+  email: false
+jobs:
+  allow_failures:
+    - node_js: node
+  include:
+    - stage: release
+      if: branch = master
+      node_js: lts/*
+      script: skip
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script:
+          - npm run release

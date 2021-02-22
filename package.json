@@ -1,0 +1,72 @@
+{
+  "name": "@labshare/hedwig",
+  "private": true,
+  "scripts": {
+    "prerelease": "npm run build:full",
+    "release": "lerna version --yes && lerna publish from-git",
+    "postinstall": "lerna bootstrap",
+    "build": "lerna run build --sort",
+    "build:full": "npm run clean && npm run build",
+    "clean": "lerna run clean",
+    "lint": "npm run prettier:check && npm run eslint && npm run lint:ui",
+    "lint:fix": "npm run eslint:fix && npm run prettier:fix && npm run lint:ui:fix",
+    "lint:ui": "lerna run --scope @labshare/metadata-ui lint",
+    "lint:ui:fix": "lerna run --scope @labshare/metadata-ui lint:fix",
+    "eslint": "eslint -c .eslintrc.js --ext '.js,.ts' --report-unused-disable-directives .",
+    "eslint:fix": "npm run eslint -- --fix",
+    "prettier": "prettier \"**/*.ts\" \"**/*.js\" \"**/*.md\"",
+    "prettier:check": "npm run prettier -- -l",
+    "prettier:cli": "npm run prettier -- -c",
+    "prettier:fix": "npm run prettier:cli -- --write",
+    "pretest:api": "npm run clean && npm run build",
+    "test": "npm run test:api && npm run test:ui",
+    "test:api": "lerna run --scope @labshare/hedwig-api test",
+    "test:ui": "lerna run --scope @labshare/ng-hedwig test",
+    "test:dev": "npm run mocha",
+    "mocha": "mocha \"packages/*/dist/**/__tests__/**/*.js\" ",
+    "docker:test": "docker-compose -f docker-compose-test.yml",
+    "docker:test:up": "npm run docker:test -- up -d",
+    "docker:test:down": "npm run docker:test -- down",
+    "docker": "docker-compose -f docker-compose.yml",
+    "docker:up": "npm run docker -- up -d",
+    "docker:down": "npm run docker -- down"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@commitlint/config-lerna-scopes": "^7.5.1",
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@labshare/semantic-release-config": "^1.1.2",
+    "@loopback/eslint-config": "^9.0.2",
+    "@types/jasmine": "^3.6.3",
+    "@types/mocha": "^7.0.1",
+    "@types/yargs": "^15.0.3",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "assert": "^2.0.0",
+    "eslint": "^7.8.1",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-eslint-plugin": "^2.3.0",
+    "eslint-plugin-mocha": "^8.0.0",
+    "husky": "^4.3.7",
+    "lerna": "^3.22.1",
+    "lint-staged": "^10.5.3",
+    "mocha": "^8.1.3",
+    "nyc": "^15.1.0",
+    "prettier": "^2.1.1",
+    "source-map-support": "^0.5.16",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{ts,js,json,css,md,ejs,html}": [
+      "npm run lint:fix"
+    ]
+  }
+}

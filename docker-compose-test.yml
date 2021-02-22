@@ -1,0 +1,12 @@
+version: '3'
+services:
+  hedwig-db-test:
+    container_name: hedwig-db-test
+    image: mongo
+    ports:
+      - ${HEDWIG_DB_PORT-27017}:27017
+  hedwig-cache-test:
+    image: redis
+    container_name: hedwig-cache-test
+    ports:
+      - ${HEDWIG_REDIS_PORT-6379}:6379
